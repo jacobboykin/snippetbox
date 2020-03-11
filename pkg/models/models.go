@@ -11,7 +11,6 @@ var (
 	ErrDuplicateEmail     = errors.New("models: duplicate email")
 )
 
-// Snippet : struct defining the snippet table model
 type Snippet struct {
 	ID      int
 	Title   string
@@ -20,7 +19,6 @@ type Snippet struct {
 	Expires time.Time
 }
 
-// User : struct defining the user table model
 type User struct {
 	ID             int
 	Name           string

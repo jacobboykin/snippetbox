@@ -8,16 +8,13 @@ import (
 	"unicode/utf8"
 )
 
-// EmailRX : sanity checks the format of an email address
 var EmailRX = regexp.MustCompile("^[a-zA-Z0-9.!#$%&'*+\\/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)*$")
 
-// Form : struct to hold form data and any validation errors for the form data
 type Form struct {
 	url.Values
 	Errors errors
 }
 
-// New : init a new form struct
 func New(data url.Values) *Form {
 	return &Form{
 		data,
@@ -25,7 +22,6 @@ func New(data url.Values) *Form {
 	}
 }
 
-// Required : Check that specific fields in the form data are present and not blank
 func (f *Form) Required(fields ...string) {
 	for _, field := range fields {
 		value := f.Get(field)
@@ -35,7 +31,6 @@ func (f *Form) Required(fields ...string) {
 	}
 }
 
-// MaxLength : Check that a specific field in the form contains a maximum number of characters
 func (f *Form) MaxLength(field string, d int) {
 	value := f.Get(field)
 	if value == "" {
@@ -46,8 +41,6 @@ func (f *Form) MaxLength(field string, d int) {
 	}
 }
 
-// PermittedValues : Check that a specific field in the form matches one of a set of specific
-// permissted values
 func (f *Form) PermittedValues(field string, opts ...string) {
 	value := f.Get(field)
 	if value == "" {
@@ -61,18 +54,16 @@ func (f *Form) PermittedValues(field string, opts ...string) {
 	f.Errors.Add(field, "This field is invalid")
 }
 
-// MinLength : Check that a specific field contains a minimum number of characters
 func (f *Form) MinLength(field string, d int) {
 	value := f.Get(field)
 	if value == "" {
 		return
 	}
 	if utf8.RuneCountInString(value) < d {
-		f.Errors.Add(field, fmt.Sprintf("This field is too short (minimum is %d characters", d))
+		f.Errors.Add(field, fmt.Sprintf("This field is too short (minimum is %d characters)", d))
 	}
 }
 
-// MatchesPattern : Check that a specific field matches a regexp
 func (f *Form) MatchesPattern(field string, pattern *regexp.Regexp) {
 	value := f.Get(field)
 	if value == "" {
@@ -83,7 +74,6 @@ func (f *Form) MatchesPattern(field string, pattern *regexp.Regexp) {
 	}
 }
 
-// Valid : returns true if there are no errors
 func (f *Form) Valid() bool {
 	return len(f.Errors) == 0
 }

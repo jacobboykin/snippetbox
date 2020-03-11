@@ -1,8 +1,8 @@
 package main
 
 import (
+	"html/template"
 	"path/filepath"
-	"text/template"
 	"time"
 
 	"github.com/jacobboykin/snippetbox/pkg/forms"
@@ -19,19 +19,18 @@ type templateData struct {
 	Snippets        []*models.Snippet
 }
 
-// Create a human-readable date string
 func humanDate(t time.Time) string {
-	return t.Format("02 Jan 2006 at 15:04")
+	if t.IsZero() {
+		return ""
+	}
+
+	return t.UTC().Format("02 Jan 2006 at 15:04")
 }
 
-/* Create a template.FuncMap object to act as a lookup
-   between the names of the custom template functions and the
-   functions themeselves */
 var functions = template.FuncMap{
 	"humanDate": humanDate,
 }
 
-// Parse all templates and create a template cache
 func newTemplateCache(dir string) (map[string]*template.Template, error) {
 	cache := map[string]*template.Template{}
 
@@ -43,7 +42,6 @@ func newTemplateCache(dir string) (map[string]*template.Template, error) {
 	for _, page := range pages {
 		name := filepath.Base(page)
 
-		// Register the template.FuncMap, then parse the file
 		ts, err := template.New(name).Funcs(functions).ParseFiles(page)
 		if err != nil {
 			return nil, err

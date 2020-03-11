@@ -25,7 +25,6 @@ func (app *application) notFound(w http.ResponseWriter) {
 	app.clientError(w, http.StatusNotFound)
 }
 
-// addDefaultData : Adds the current year to the CurrentYear field of a templateData struct
 func (app *application) addDefaultData(td *templateData, r *http.Request) *templateData {
 	if td == nil {
 		td = &templateData{}
@@ -35,7 +34,6 @@ func (app *application) addDefaultData(td *templateData, r *http.Request) *templ
 	td.CurrentYear = time.Now().Year()
 	td.Flash = app.session.PopString(r, "flash")
 	td.IsAuthenticated = app.isAuthenticated(r)
-
 	return td
 }
 
@@ -47,7 +45,6 @@ func (app *application) render(w http.ResponseWriter, r *http.Request, name stri
 	}
 
 	buf := new(bytes.Buffer)
-
 	err := ts.Execute(buf, app.addDefaultData(td, r))
 	if err != nil {
 		app.serverError(w, err)
