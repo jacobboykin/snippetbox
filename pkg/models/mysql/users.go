@@ -10,10 +10,12 @@ import (
 	"golang.org/x/crypto/bcrypt"
 )
 
+// UserModel : wraps a sql.DB connection pool
 type UserModel struct {
 	DB *sql.DB
 }
 
+// Insert : inserts a new user into the db
 func (m *UserModel) Insert(name, email, password string) error {
 	hashedPassword, err := bcrypt.GenerateFromPassword([]byte(password), 12)
 	if err != nil {
@@ -38,10 +40,34 @@ func (m *UserModel) Insert(name, email, password string) error {
 	return nil
 }
 
+// Authenticate : authenticates a user's email and password
 func (m *UserModel) Authenticate(email, password string) (int, error) {
-	return 0, nil
+	var id int
+	var hasedPassword []byte
+	stmt := "SELECT id, hashed_password FROM users WHERE email = ? AND active = TRUE"
+	row := m.DB.QueryRow(stmt, email)
+	err := row.Scan(&id, &hasedPassword)
+	if err != nil {
+		if errors.Is(err, sql.ErrNoRows) {
+			return 0, models.ErrInvalidCredentials
+		} else {
+			return 0, err
+		}
+	}
+
+	err = bcrypt.CompareHashAndPassword(hasedPassword, []byte(password))
+	if err != nil {
+		if errors.Is(err, bcrypt.ErrMismatchedHashAndPassword) {
+			return 0, models.ErrInvalidCredentials
+		} else {
+			return 0, err
+		}
+	}
+
+	return id, nil
 }
 
+// Get : returns a specific user based on its id
 func (m *UserModel) Get(id int) (*models.User, error) {
 	return nil, nil
 }
