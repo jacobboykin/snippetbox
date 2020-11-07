@@ -1,5 +1,6 @@
-/bin
-/.go
-/.container-*
-/.dockerfile-*
-/tls
+bin
+.go
+.container-*
+.dockerfile-*
+tls
+.DS_Store

@@ -51,7 +51,6 @@ func TestUserModelGet(t *testing.T) {
 			defer teardown()
 
 			m := UserModel{db}
-
 			user, err := m.Get(tt.userID)
 
 			if err != tt.wantError {
