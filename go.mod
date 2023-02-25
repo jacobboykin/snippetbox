@@ -9,5 +9,5 @@ require (
 	github.com/justinas/alice v1.2.0
 	github.com/justinas/nosurf v1.1.0
 	golang.org/x/crypto v0.0.0-20200317142112-1b76d66859c6
-	golang.org/x/sys v0.0.0-20190606165138-5da285871e9c // indirect
+	golang.org/x/sys v0.1.0 // indirect
 )
